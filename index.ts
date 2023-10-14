@@ -11,6 +11,7 @@ export type SplitAudioParams = {
 	maxNoiseLevel?: number; // silence is defined below this dB value
 	minSilenceLength?: number; // (sec) we are searching for silence intervals at least of this lenght
 	minSongLength?: number; // (sec) if a track is sorter than this, we merge it to the previous track
+  fastStart?: boolean; // optional flag for faststart
 };
 
 export async function splitAudio(params: SplitAudioParams): Promise<void> {
@@ -90,6 +91,7 @@ export async function splitAudio(params: SplitAudioParams): Promise<void> {
 						artist: params.artist,
 						album: params.album,
 						outputTrack: `${params.outputDir + trackName}.${fileExtension}`,
+            fastStart: params.fastStart,
 					});
 				});
 
@@ -111,6 +113,7 @@ export type ExtractAudioParams = {
 	artist?: string; // meta info, optional
 	album?: string; // meta info, optional
 	outputTrack: string; // output track
+  fastStart?: boolean; // optional flag for faststart
 };
 
 export async function extractAudio(params: ExtractAudioParams): Promise<void> {
@@ -136,6 +139,13 @@ export async function extractAudio(params: ExtractAudioParams): Promise<void> {
 			ffmpegCommand = ffmpegCommand.addOutputOptions(
 				"-metadata",
 				`album="${params.album}"`
+			);
+		}
+
+		if (params.fastStart) {
+			ffmpegCommand = ffmpegCommand.addOutputOptions(
+				"-movflags",
+				"faststart"
 			);
 		}
 
