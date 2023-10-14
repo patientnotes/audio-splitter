@@ -7,7 +7,6 @@
 	"scripts": {
 		"dev": "tsnd dev/index.ts",
 		"build": "tsc",
-		"publish": "npm run build && npm publish",
     "prepare": "npm run build"
 	},
 	"repository": {
